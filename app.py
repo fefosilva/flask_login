@@ -63,6 +63,26 @@ class RegisterForm(FlaskForm):
         if existing_username:
             raise ValidationError("Username already exist! Please choose another.")
 
+# Login form class object definition
+class LoginForm(FlaskForm):
+    """
+        Login form object class definition
+    """
+    #username validation parameters
+    username = StringField(
+        validators=[InputRequired(),Length(min=4,max=20)],
+        render_kw={"placeholder": "Username"}
+        )
+
+    #password validation parameters
+    password = PasswordField(
+        validators=[InputRequired(),Length(min=4,max=20)],
+        render_kw={"placeholder": "Password"}
+        )
+
+    #submit field definition
+    submit = SubmitField(label="Login")
+
 
 @app.route('/')
 def home():
