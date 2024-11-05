@@ -36,6 +36,34 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
 
+# Registration class object definition
+class RegisterForm(FlaskForm):
+    """
+        Register form object class definition
+    """
+    #username validation parameters
+    username = StringField(
+        validators=[InputRequired(),Length(min=4,max=20)],
+        render_kw={"placeholder": "Username"}
+        )
+    #password validation parameters
+    password = PasswordField(
+        validators=[InputRequired(),Length(min=4,max=20)],
+        render_kw={"placeholder": "Password"}
+        )
+    #submit field definition
+    submit = SubmitField(label="Register")
+
+    def validate_username(self, username):
+        """
+            Username validation function
+        """
+        existing_username = User.query.filter_by(username = username.data).first()
+
+        if existing_username:
+            raise ValidationError("Username already exist! Please choose another.")
+
+
 @app.route('/')
 def home():
     """
