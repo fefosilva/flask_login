@@ -26,3 +26,13 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)
 db.init_app(app=app)
 
+# Database USER model definition
+class User(db.Model, UserMixin):
+    """
+        Class that defines the database table scheme
+        for the user authentication data 
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    password = db.Column(db.String(80), nullable=False)
+
