@@ -17,6 +17,24 @@ app.config['SQLALCHEMY_DATABASE_URI'] = ('sqlite:///'+
                                          '/database.db'
                                         )
 app.config['SECRET_KEY'] = 'secrecyismyname'
+
+#Instantiate Bcrypt object over flask app
+bcrypt = Bcrypt(app = app)
+
+#Instantiate LoginManager object
+login_manager = LoginManager(app=app)
+login_manager.init_app(app=app)
+login_manager.login_view = "login"
+
+#Callback function to reload user from active session
+@login_manager.user_loader
+def load_user(user_id):
+    """
+        callback function to reload user id from active session
+    """
+    return User.query.get(int(user_id))
+
+
 # Dabase class definition, database instantiation and database connection
 class Base(DeclarativeBase):
     """
@@ -115,6 +133,16 @@ def dashboard():
         Renders dashboard
     """
     return render_template('dashboard.html')
+
+
+@app.route('/logout', methods = ['GET', 'POST'])
+@login_required
+def logout():
+    """
+        Logsout user
+    """
+    logout_user()
+    return redirect(url_for('login'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
