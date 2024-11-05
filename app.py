@@ -44,3 +44,21 @@ def home():
     """
     return render_template('home.html')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """
+       Sign up page 
+    """
+    form  = RegisterForm()
+    if form.validate_on_submit():
+        hashed_passwd = bcrypt.generate_password_hash(form.password.data)
+        new_user = User(username=form.username.data, password=hashed_passwd)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
+
+    return render_template('register.html', form=form)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
