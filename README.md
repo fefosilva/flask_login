@@ -1,9 +1,10 @@
 # flask_login
-The purpose of thios application was to build an example application to perform login logout operation using an encription authentication method to safeguard user access.
+The purpose of this application was to build an example of performing login and logout operations using an encription authentication method to safeguard user access.
 ## Arquitecture
 The application was built using basic html templates, a Flask based API and a SQLITE database to emulate necessary database operations.
 ## Modules and Environment
 The application was developed and tested using a python venv virtual environment with folowing requirements:
+
 antiorm==1.2.1
 bcrypt==4.2.0
 blinker==1.8.2
