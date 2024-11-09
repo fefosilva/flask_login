@@ -18,6 +18,43 @@ app.config['SQLALCHEMY_DATABASE_URI'] = ('sqlite:///'+
                                         )
 app.config['SECRET_KEY'] = 'secrecyismyname'
 
+
+# Dabase class definition, database instantiation and database connection
+class Base(DeclarativeBase):
+    """
+    Database model class
+    """
+
+db = SQLAlchemy(model_class=Base)
+db.init_app(app=app)
+
+# Database USER model definition
+class User(db.Model, UserMixin):
+    """
+        Class that defines the database table scheme
+        for the user authentication data 
+
+        ...
+
+        Attributes
+        ----------
+        id : int
+            user id as table primary key
+        username : str
+            username of the registered or to be registered
+        password : str
+            hashed user password passed to the user table
+
+        Methods
+        -------
+
+        None 
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False, unique=True)
+    password = db.Column(db.String(80), nullable=False)
+
+
 #Instantiate Bcrypt object over flask app
 bcrypt = Bcrypt(app = app)
 
@@ -35,29 +72,26 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-# Dabase class definition, database instantiation and database connection
-class Base(DeclarativeBase):
-    """
-    Database model class
-    """
-
-db = SQLAlchemy(model_class=Base)
-db.init_app(app=app)
-
-# Database USER model definition
-class User(db.Model, UserMixin):
-    """
-        Class that defines the database table scheme
-        for the user authentication data 
-    """
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
-    password = db.Column(db.String(80), nullable=False)
-
 # Registration class object definition
 class RegisterForm(FlaskForm):
     """
         Register form object class definition
+        ...
+
+        Attributes
+        ----------
+        username : int
+            ...
+        password : str
+            ...
+        submit : str
+            ...
+
+        Methods
+        -------
+
+        validade_username(self, username="") :
+            validates if user already exists in the system 
     """
     #username validation parameters
     username = StringField(
@@ -74,7 +108,14 @@ class RegisterForm(FlaskForm):
 
     def validate_username(self, username):
         """
-            Username validation function
+            Username validation function that validates if username is already registered
+            under an existing registered user
+
+            Parameters
+            ----------
+
+            username : str
+                username string to be registered in the User table
         """
         existing_username = User.query.filter_by(username = username.data).first()
 
